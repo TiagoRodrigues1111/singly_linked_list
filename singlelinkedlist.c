@@ -31,11 +31,11 @@
 *  a especific position operations          
 * It is assumed for list insertion that it starts at index 0,and if n is larger than the list,
 *  it is added to the end  
-                                                                                                                *
-* NOTES:                                                                                                        *
+                                                                                                                
+* NOTES:                                                                                                        
 * If more that 2^64 is needed, use arbitrary-precision arithmetic libs                                  
 *                                       
-* REQUIREMENTS/FUNCTIONAL SPECIFICATIONS REFERENCES:                                                            *
+* REQUIREMENTS/FUNCTIONAL SPECIFICATIONS REFERENCES:                                                            
 *
 *                                                                                                               
 * DEVELOPMENT HISTORY:                                                                                          
@@ -55,7 +55,7 @@
 /* 0 copyright/licensing */
 /***************************************************************************************************************/
 /*
-*       (c) 2024 Tiago Filipe Rodrigues tiagorodrigues1590@hotmail.com
+*       2024 Tiago Filipe Rodrigues tiagorodrigues1590@hotmail.com
 */
 /***************************************************************************************************************/
 

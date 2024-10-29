@@ -22,7 +22,7 @@
 /* 0 copyright/licensing */
 /**********************************************************************
 *
-* (c) 2024 Tiago Filipe Rodrigues tiagorodrigues1590@hotmail.com
+* 2024 Tiago Filipe Rodrigues tiagorodrigues1590@hotmail.com
 *
 ***********************************************************************/
 
