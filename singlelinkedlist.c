@@ -44,7 +44,8 @@
 * ----------    ---------------         ---------       -------         ---------------------   
 * 27-10-2024    Tiago Rodrigues                         0               Prolog start and coding of a function
 * 28-10-2024    Tiago Rodrigues                         0               Added prolog to functions 
-*                                                                                                               
+* 24-01-2025    Tiago Rodrigues                         0               Changed all operations to use void *
+*                                                                                                              
 * ALGORITHM (PDL)
 *    
 *
@@ -64,6 +65,7 @@
 /*****************************************************/
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 #include "singlelinkedlist.h"
 /*****************************************************/
@@ -83,23 +85,20 @@
 
 /* 4 typedefs */
 /*****************************************************/
-typedef struct node 
-{
-        // static max_dim_of_list counter       
-        struct node_value *value;
-        struct node *next;
-}node_s_t;
 
-
-typedef struct node_value
-{       
-        int val;
-}node_value_s_t;
 /*****************************************************/
 
 
 /* 5 global variable declarations */
 /*****************************************************/
+struct node
+{
+        // uint64_t size_of_datatype;                   not needed, unless trying to make a multi value linked list
+        void* data;
+        struct node* next;
+};
+
+
 
 /*****************************************************/
 
@@ -113,76 +112,9 @@ typedef struct node_value
 
 /* 7 function declarations */
 /*****************************************************/
-
-
-
-
 /******************************************************************
 *
-* FUNCTION NAME:        create_value
-*
-*
-*
-* ARGUMENTS:
-*
-* ARGUMENT 	TYPE	        I/O	DESCRIPTION
-* --------	-----------	---	--------------------------
-* value1        void*           I       void pointer to data to 
-*                                        put in data of a node
-*
-*
-* RETURNS: node_value_s_t (as a new values structure)     
-*
-*
-*
-*****************************************************************/
-node_value_s_t *create_value(void *value1)
-{
-        int node_value_s_to_put = *((int *) value1);
-        node_value_s_t *value_node_s_to_add = NULL;
-        value_node_s_to_add = (node_value_s_t *) calloc(1,sizeof(node_value_s_t));
-
-
-        value_node_s_to_add->val = node_value_s_to_put;
-                
-        return value_node_s_to_add;
-}
-
-/******************************************************************
-*
-* FUNCTION NAME:        create_node
-*
-*
-*
-* ARGUMENTS:
-*
-* ARGUMENT 	TYPE	        I/O	DESCRIPTION
-* --------	-----------	---	--------------------------
-* value         node_value_s_t* I       pointer to data to put in data of a node
-*
-*
-* RETURNS: node_s_t (as a new node structure)     
-*
-*
-*
-*****************************************************************/
-node_s_t *create_node(node_value_s_t *value)
-{
-        node_s_t *new_node = NULL; 
-        new_node = (node_s_t *) calloc(1,sizeof(node_s_t));
-        if(new_node == NULL)
-        {
-                exit(EXIT_FAILURE);
-        }
-        new_node->value = value;     
-        new_node->next = NULL;
-        
-        return new_node;            
-}
-
-/******************************************************************
-*
-* FUNCTION NAME:        create_list
+* FUNCTION NAME:        
 *
 *
 *
@@ -190,383 +122,180 @@ node_s_t *create_node(node_value_s_t *value)
 *
 * ARGUMENT 	TYPE	        I/O	DESCRIPTION
 * --------	-------------	---	--------------------------
-* head          node_s_t*       I       pointer to a node
+* 
 *
 *
-* RETURNS: node_s_t (as a head to a new list)
-*
+* RETURNS:
 *
 *
 *****************************************************************/
-node_s_t *create_list(node_s_t *head)
-{        
-        return add_node_s_to_head(NULL, head);
+void create_node(void** node)
+{
+        (*node) = malloc(1*sizeof(struct node));
+        if(NULL == (*node))
+        {
+                fprintf(stderr, "Memory allocation failed\n");
+                return ;
+        }
+        (*(struct node **)(node))->next = NULL;
+        return ;
 }
 
 
 /******************************************************************
 *
-* FUNCTION NAME:        add_node_s_to_head
+* FUNCTION NAME:        
 *
 *
 *
 * ARGUMENTS:
 *
 * ARGUMENT 	TYPE	        I/O	DESCRIPTION
-* --------	-----------	---	--------------------------
-* head          node_s_t*       I       pointer to head of list 
-* new_node      node_s_t*       I       pointer to new node
+* --------	-------------	---	--------------------------
+* 
 *
-* RETURNS: node_s_t* (new head of list)     
 *
+* RETURNS:
 *
 *
 *****************************************************************/
-node_s_t *add_node_to_head(node_s_t *head, node_s_t *new_node)
+void give_node_value(void* node, void *value1, uint64_t size_of_datatype)
 {
-        if(head == NULL)
+        if(NULL == node)
         {
-                head = new_node;
+                fprintf(stderr, "Node mem location is null\n");
+                return ;
         }
-        else
+
+        ((struct node*)node)->data =(void*) malloc(1*size_of_datatype);
+
+        if(NULL == ((struct node*)node)->data)
         {
-                new_node->next = head;
-                head = new_node;
-        
+                fprintf(stderr, "Memory allocation failed\n");
         }
-        return head;
-        
+
+        memcpy(((struct node*)node)->data, value1, size_of_datatype);
+
+        return ;
 }
 
-/******************************************************************
-*
-* FUNCTION NAME:        add_node_to_tail
-*
-*
-*
-* ARGUMENTS:
-*
-* ARGUMENT 	TYPE	        I/O	DESCRIPTION
-* --------	-----------	---	--------------------------
-* head          node_s_t*       I       pointer to head of list 
-* new_node      node_s_t*       I       pointer to new node
-*
-* RETURNS: node_s_t* (head of list)     
-*
-*
-*
-*****************************************************************/
-node_s_t *add_node_to_tail(node_s_t *head, node_s_t *new_node)
+
+
+void add_node_to_head(void** head, void* node)
 {
-        node_s_t *auxH;
-        if(head == NULL)
+        if(NULL == (*head))
         {
-                head = new_node;
+                head = node;
+                return;
         }
-        else
+        if(NULL == node)
         {
-                auxH = head;
+                return;
+        }
+
+        ((struct node*)node)->next= ((struct node*)(*head));
+
+        (*head) = node;
+
+}
+
+void add_node_to_tail(void** head, void* node)
+{
+        if(NULL == (*head))
+        {
+                head = node;
+                return;
+        }
+        if(NULL == node)
+        {
+                return;
+        }
+
+        struct node* aux_ptr = (*(struct node**)(head));
+        while(NULL != aux_ptr->next)
+        {
                 
-                while(auxH->next != NULL)
-                {
-                        auxH = auxH->next;
-                }
-                auxH->next = new_node;
+                get_next_node((void**) &aux_ptr);
+
+
         }
-        return head;
+
+        aux_ptr->next = node;
+
+        return;
+
 }
 
-/******************************************************************
-*
-* FUNCTION NAME:        add_node_in_index_n
-*
-*
-*
-* ARGUMENTS:
-*
-* ARGUMENT 	TYPE	        I/O	DESCRIPTION
-* --------	-----------	---	--------------------------
-* head          node_s_t*       I       pointer to head of list 
-* new_node      node_s_t*       I       pointer to new node
-* n             uint64_t        I       position to add new node
-*
-* RETURNS: node_s_t* (head of list)     
-*
-*
-*
-*****************************************************************/
-node_s_t *add_node_in_index_n(node_s_t *head, node_s_t *new_node, uint64_t n)
-{
-        node_s_t *auxp;
-        uint64_t aux_inc = 0;
-        
-        if(head == NULL)
-        {
-                head = new_node;
-        }
-        else if(n == 0)
-        {
-              head = add_node_s_to_head(head,new_node);
-        }
-        else
-        {
-                auxp = head;
-                
-                while((auxp->next != NULL) && (aux_inc < (n-1) ))
-                {
-                        auxp = auxp->next;
-                        aux_inc++;
-                }
-                if(aux_inc != (n-1))
-                {
-                        ; // it means that the node to be introduzed at n is outside of the list size (n> number of elements)
-                }
-                new_node->next = auxp->next;
-                auxp->next = new_node;
-                
-        }
-        return head;
-             
-}
-
-/******************************************************************
-*
-* FUNCTION NAME:        remove_head_node
-*
-*
-*
-* ARGUMENTS:
-*
-* ARGUMENT 	TYPE	        I/O	DESCRIPTION
-* --------	-----------	---	--------------------------
-* head          node_s_t*       I       pointer to head of list 
-*
-* RETURNS: node_s_t* (new head of list)     
-*
-*
-*
-*****************************************************************/
-node_s_t *remove_head_node(node_s_t *head)
-{
-        node_s_t *auxp = NULL;
-
-        if (head == NULL) 
-        {
-                ;
-        }
-        else
-        {
-                auxp = head->next;
-                free(head->value);
-                free(head);
-                head = auxp;
-        }
-        return head;    
-}
-
-/******************************************************************
-*
-* FUNCTION NAME:        remove_tail_node
-*
-*
-*
-* ARGUMENTS:
-*
-* ARGUMENT 	TYPE	        I/O	DESCRIPTION
-* --------	-----------	---	--------------------------
-* head          node_s_t*       I       pointer to head of list
-*
-* RETURNS: node_s_t* (head of list)     
-*
-*
-*
-*****************************************************************/
-node_s_t *remove_tail_node(node_s_t *head)
-{
-        if(head == NULL)
-        {
-                ;
-        }
-        else if (head->next == NULL) 
-        {
-                free(head->value);
-                free(head);
-                head = NULL;
-        }
-        else
-        {
-                node_s_t * auxp = head;
-                while (auxp->next->next != NULL)
-                {
-                        auxp = auxp->next;
-                }
-                /* now current points to the second to last item of the list, so let's remove current->next */
-                free(auxp->next->value);
-                free(auxp->next);
-                auxp->next = NULL;          
-        }
-        return head;
-}
-
-/******************************************************************
-*
-* FUNCTION NAME:        remove_node_in_index_n
-*
-*
-*
-* ARGUMENTS:
-*
-* ARGUMENT 	TYPE	        I/O	DESCRIPTION
-* --------	-----------	---	--------------------------
-* head          node_s_t*       I       pointer to head of list 
-* n             uint64_t        I       position of node to remove
-*
-* RETURNS: node_s_t* (head of list)     
-*
-*
-*
-*****************************************************************/
-node_s_t *remove_node_in_index_n(node_s_t *head, uint64_t n)
-{
-        node_s_t * auxp = NULL, *auxp2 = NULL;
-        uint64_t aux_inc = 0;
-        
-        if(head == NULL)
-        {
-                ;
-        }
-        else if (head->next == NULL) 
-        {
-                free(head->value);
-                free(head);
-                head = NULL;
-        }
-        else if(n == 0)
-        {
-                head = remove_head_node(head);
-        }
-        else
-        {
-                auxp = head;
-                while ((auxp->next->next != NULL) && (aux_inc < (n-1) ))
-                {
-                        auxp = auxp->next;
-                        aux_inc++;
-                }
-                auxp2 = auxp->next->next;
-                free(auxp->next->value);
-                free(auxp->next);
-                auxp->next = auxp2;          
-                                
-        }
-        return head; 
-}
-
-/******************************************************************
-*
-* FUNCTION NAME:        print_list
-*
-*
-*
-* ARGUMENTS:
-*
-* ARGUMENT 	TYPE	        I/O	DESCRIPTION
-* --------	-----------	---	--------------------------
-* head          node_s_t*       I       pointer to head of list 
-*
-* RETURNS: void     
-*
-*
-*
-*****************************************************************/
-void print_list(node_s_t *head)
-{
-        node_s_t *current = head;
-        while (current != NULL) 
-        {
-                printf("%d\n", current->value->val);
-                current = current->next;
-        }    
-        
-        
-        
-}
-
-/******************************************************************
-*
-* FUNCTION NAME:        get_value
-*
-*
-*
-* ARGUMENTS:
-*
-* ARGUMENT 	TYPE	        I/O	DESCRIPTION
-* --------	-----------	---	--------------------------
-* head          node_s_t*           I     pointer to head of list 
-*
-*
-* RETURNS: void* (which is the data position of the value of head)     
-*
-*
-*
-*****************************************************************/
-void *get_value(node_s_t * head)
-{
-        
-        return (void *)&head->value->val;
-}
-
-/******************************************************************
-*
-* FUNCTION NAME:        get_value_in_index_n
-*
-*
-*
-* ARGUMENTS:
-*
-* ARGUMENT 	TYPE	        I/O	DESCRIPTION
-* --------	-----------	---	-----------------------------
-* head          node_s_t*       I       pointer to head of list 
-* n             uint64_t        I       position of node to get value
-*
-*
-* RETURNS: void* (which is the data position of the value of head)     
-*
-*
-*
-*****************************************************************/
-void *get_value_in_index_n(node_s_t * head, uint64_t n)
+void add_node_in_index_n(void** head, void* node,uint64_t position)
 {
 
-        if(head == NULL)
+
+
+}
+
+void remove_head_node(void** head)
+{
+        if(NULL == (*head))
         {
-                return NULL;
+                return;
         }
-        else if(n == 0)
-        {
-                return get_value(head);
-        }
-        else
-        {
-                // To remove the need for an auxiliary variable, check when n>0, and decrement
-                while((head != NULL) && (n > 0))                                          
-                {
-                        head = head->next;
-                        n--;                    
-                }
-                if(head == NULL)
-                {
-                        return NULL;
-                }
-                return  (void *) &head->value->val;               
-        }
+
+        struct node* aux_ptr = (*(struct node**)(head));
+
+        get_next_node(head);
+
+        free(aux_ptr->data);
+        free(aux_ptr);
+
+        return;
+
+}
+
+void remove_tail_node(void** head)
+{
+
+
+
+}
+
+void remove_node_in_index_n(void** head, uint64_t position)
+{
+
+
+
 }
 
 
 
+void get_next_node(void** node)
+{
+        (*(struct node**)(node)) = (*(struct node**)(node))->next;
+        return;
 
-// list orderer
-// index searcher(      only first ? = TRUE, FALSE);
+}
+
+
+
+void* get_value(void* node)
+{
+
+
+        return ((struct node*)node)->data;
+
+}
+
+
+void* get_value_in_index_n(void* head, uint64_t n)
+{
+
+
+
+}
+
+// void print_list(void* head);
+
+
+
 
 
 
