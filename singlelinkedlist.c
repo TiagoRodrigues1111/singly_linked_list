@@ -45,6 +45,7 @@
 * 27-10-2024    Tiago Rodrigues                         0               Prolog start and coding of a function
 * 28-10-2024    Tiago Rodrigues                         0               Added prolog to functions 
 * 24-01-2025    Tiago Rodrigues                         0               Changed all operations to use void *
+* 25-01-2025    Tiago Rodrigues                         0               New operations implemented
 *                                                                                                              
 * ALGORITHM (PDL)
 *    
@@ -199,6 +200,7 @@ void add_node_to_head(void** head, void* node)
 
 }
 
+
 void add_node_to_tail(void** head, void* node)
 {
         if(NULL == (*head))
@@ -212,10 +214,10 @@ void add_node_to_tail(void** head, void* node)
         }
 
         struct node* aux_ptr = (*(struct node**)(head));
-        while(NULL != aux_ptr->next)
+        while(NULL != get_next_node((void *)aux_ptr))
         {
                 
-                get_next_node((void**) &aux_ptr);
+                next_node((void**) &aux_ptr);
 
 
         }
@@ -226,11 +228,36 @@ void add_node_to_tail(void** head, void* node)
 
 }
 
-void add_node_in_index_n(void** head, void* node,uint64_t position)
+
+void add_node_in_index_n(void** head, void* node, uint64_t position)
 {
+        if(NULL == (*head))
+        {
+                head = node;
+                return;
+        }
+        if(NULL == node)
+        {
+                return;
+        }
+        if(0 == position)
+        {
+                add_node_to_head(head, node);
+                return ;
+        }
 
+        struct node* aux_ptr = (*(struct node**)(head));
+        while(NULL != get_next_node((void *)aux_ptr) && position>1)                     //has to be 1
+        {
+                next_node((void**) &aux_ptr);
+                position--;
+        }
 
+        ((struct node*)node)->next= aux_ptr->next;
+        aux_ptr->next =((struct node*)node);
+        
 
+        return;
 }
 
 void remove_head_node(void** head)
@@ -242,7 +269,7 @@ void remove_head_node(void** head)
 
         struct node* aux_ptr = (*(struct node**)(head));
 
-        get_next_node(head);
+        next_node(head);
 
         free(aux_ptr->data);
         free(aux_ptr);
@@ -253,43 +280,115 @@ void remove_head_node(void** head)
 
 void remove_tail_node(void** head)
 {
+        if(NULL == (*head))
+        {
+                return;
+        }
+        if(NULL == (*(struct node**)(head))->next)
+        {
+                free((*(struct node**)(head))->data);
+                free((*head));
+                return;
+        }
 
+        struct node* aux_ptr = (*(struct node**)(head));
+        while(NULL != get_next_node(get_next_node((void *)aux_ptr)))
+        {
+                
+                next_node((void**) &aux_ptr);
+
+
+        }
+
+        //free(get_value(get_next_node((void *)aux_ptr)));
+        free(aux_ptr->next->data);
+        //free(get_next_node((void *)aux_ptr));
+        free(aux_ptr->next);
+        aux_ptr->next = NULL;
+
+        return;
 
 
 }
 
 void remove_node_in_index_n(void** head, uint64_t position)
 {
+        if(NULL == (*head))
+        {
+                return;
+        }
+        if(0 == position)
+        {
+                remove_head_node(head);
+                return ;
+        }
 
+        struct node* aux_ptr = (*(struct node**)(head));
+        while(NULL != get_next_node((void *)aux_ptr) && position>1)                     //has to be 1
+        {
+                next_node((void**) &aux_ptr);
+                position--;
+        }
 
+        if(NULL != get_next_node((void *)aux_ptr))
+                return ;
 
+        if(1 == position)
+        {
+                struct node* node_to_free = NULL;
+                node_to_free = get_next_node((void *)aux_ptr);
+                aux_ptr->next = node_to_free->next;
+        
+                free(node_to_free->data);
+                free(node_to_free);
+        }
+
+        return ;
 }
 
 
 
-void get_next_node(void** node)
+void next_node(void** node)
 {
-        (*(struct node**)(node)) = (*(struct node**)(node))->next;
+        (*(struct node**)(node)) = get_next_node((*(struct node**)(node)));
         return;
-
 }
 
 
 
 void* get_value(void* node)
 {
-
-
+        if(NULL == node)
+                return NULL;
         return ((struct node*)node)->data;
+}
 
+void* get_next_node(void* node)
+{
+        if(NULL == node)
+                return NULL;
+        return ((struct node*)node)->next;
 }
 
 
 void* get_value_in_index_n(void* head, uint64_t n)
 {
+        if(NULL == (head))
+        {
+                return NULL;
+        }
 
+        struct node* aux_ptr = (*(struct node**)(head));
+        while(NULL != get_next_node((void *)aux_ptr) && n>0)                  
+        {
+                next_node((void**) &aux_ptr);
+                n--;
+        }
 
-
+        if(0 != n)
+                return NULL;
+        
+        return aux_ptr->data;
 }
 
 // void print_list(void* head);

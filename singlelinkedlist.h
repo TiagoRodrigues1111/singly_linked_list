@@ -127,12 +127,14 @@ void remove_node_in_index_n(void** head, uint64_t position);
 
 
 
-void get_next_node(void** node);
+void next_node(void** node);
 
 
 
 
 void* get_value(void* node);
+
+void* get_next_node(void* node);
 
 void* get_value_in_index_n(void* head, uint64_t n);
 
