@@ -1,6 +1,6 @@
 
 /*******************************************************************************************************
-* NAME: singlelinkedlist.h*                                                                             
+* NAME: singlelinkedlist.h                                                                        
 *                                                                                                       
 * PURPOSE: Defines a general template for single linked lists, including                                
 * the different needed functions                                                                        
@@ -13,7 +13,7 @@
 * Date          Author          Change Id       Release         Description Of Change                   
 * ----------    --------------- ---------       -------         -----------------------------------     
 * 27-10-2024    Tiago Rodrigues                       1         Prolog and definition of operations     
-*                                                                                                       
+* 24-01-2025    Tiago Rodrigues                         0       Changed all operations to use void *                                                                                                       
 *                                                                                                       
 *******************************************************************************************************/
 #ifndef SINGLELINKEDLIST_H
@@ -56,8 +56,8 @@ extern "C" {
 
 
 
-typedef struct node node_s_t;
-typedef struct node_value node_value_s_t;
+// typedef struct node node_s_t;
+// typedef struct node_value node_value_s_t;
 /*****************************************************/
 
 /* 5 global variable declarations */
@@ -72,7 +72,7 @@ typedef struct node_value node_value_s_t;
 
 /******************************************************************
 *
-* FUNCTION NAME:        create_list
+* FUNCTION NAME:        
 *
 *
 *
@@ -80,106 +80,62 @@ typedef struct node_value node_value_s_t;
 *
 * ARGUMENT 	TYPE	        I/O	DESCRIPTION
 * --------	-------------	---	--------------------------
-* head         node_s_t*         I       pointer to a node
+* 
 *
 *
-* RETURNS: node_s_t (as a head to a new list)
-*
+* RETURNS:
 *
 *
 *****************************************************************/
-node_s_t *create_list(node_s_t *head);
+void create_node(void** node);
+
 
 /******************************************************************
 *
-* FUNCTION NAME:        create_value
+* FUNCTION NAME:        
 *
 *
 *
 * ARGUMENTS:
 *
 * ARGUMENT 	TYPE	        I/O	DESCRIPTION
-* --------	-----------	---	--------------------------
-* value1        void*           I       void pointer to data to 
-*                                        put in data of a node
+* --------	-------------	---	--------------------------
+* 
 *
 *
-* RETURNS: node_value_s_t (as a new values structure)     
-*
-*
-*
-*****************************************************************/
-node_value_s_t *create_value(void *value1);
-
-/******************************************************************
-*
-* FUNCTION NAME:        get_value
-*
-*
-*
-* ARGUMENTS:
-*
-* ARGUMENT 	TYPE	        I/O	DESCRIPTION
-* --------	-----------	---	--------------------------
-* head          node_s_t*           I     pointer to head of list 
-*
-*
-* RETURNS: void* (which is the data position of the value of head)     
-*
+* RETURNS:
 *
 *
 *****************************************************************/
-void *get_value(node_s_t * head);
+void give_node_value(void* node, void *value1, uint64_t size_of_datatype);
 
 
 
+void add_node_to_head(void** head, void* node);
+
+void add_node_to_tail(void** head, void* node);                  // ** needed in case head in null
+
+void add_node_in_index_n(void** head, void* node,uint64_t position);
+
+void remove_head_node(void** head);
+
+void remove_tail_node(void** head);
+
+void remove_node_in_index_n(void** head, uint64_t position);
 
 
+void next_node(void** node);
 
-node_s_t *create_node(node_value_s_t *value);
+void* get_next_node(void* node);
 
+void* get_value(void* node);
 
+void* get_value_in_index_n(void* head, uint64_t n);
 
+// void print_list(void* head);
 
-/******************************************************************
-*
-* FUNCTION NAME:        add_node_to_head
-*
-*
-*
-* ARGUMENTS:
-*
-* ARGUMENT 	TYPE	        I/O	DESCRIPTION
-* --------	-----------	---	--------------------------
-* head          node_s_t*         I       pointer to head of list 
-* new_node      node_s_t*         I       pointer to new node
-*
-* RETURNS: node_s_t* (new head of list)     
-*
-*
-*
-*****************************************************************/
-node_s_t *add_node_to_head(node_s_t *head,node_s_t *new_node);
+void free_linked_list(void** head);
 
-node_s_t *add_node_to_tail(node_s_t *head, node_s_t *new_node);
-
-node_s_t *add_node_in_index_n(node_s_t *head, node_s_t *new_node, uint64_t n);
-
-
-
-
-
-node_s_t *remove_head_node(node_s_t *head);
-
-node_s_t *remove_tail_node(node_s_t *head);
-
-node_s_t *remove_node_in_index_n(node_s_t *head, uint64_t n);
-
-
-void print_list(node_s_t *head);
-
-
-void *get_value_in_index_n(node_s_t * head, uint64_t n);
 
 /*****************************************************/
 
