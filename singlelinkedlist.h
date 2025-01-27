@@ -111,8 +111,6 @@ void give_node_value(void* node, void *value1, uint64_t size_of_datatype);
 
 
 
-
-
 void add_node_to_head(void** head, void* node);
 
 void add_node_to_tail(void** head, void* node);                  // ** needed in case head in null
@@ -126,21 +124,17 @@ void remove_tail_node(void** head);
 void remove_node_in_index_n(void** head, uint64_t position);
 
 
-
 void next_node(void** node);
 
-
-
+void* get_next_node(void* node);
 
 void* get_value(void* node);
-
-void* get_next_node(void* node);
 
 void* get_value_in_index_n(void* head, uint64_t n);
 
 // void print_list(void* head);
 
-
+void free_linked_list(void** head);
 
 
 /*****************************************************/

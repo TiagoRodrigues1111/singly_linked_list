@@ -313,6 +313,7 @@ void remove_tail_node(void** head)
 
 void remove_node_in_index_n(void** head, uint64_t position)
 {
+
         if(NULL == (*head))
         {
                 return;
@@ -330,7 +331,7 @@ void remove_node_in_index_n(void** head, uint64_t position)
                 position--;
         }
 
-        if(NULL != get_next_node((void *)aux_ptr))
+        if(NULL == get_next_node((void *)aux_ptr))
                 return ;
 
         if(1 == position)
@@ -367,7 +368,8 @@ void* get_next_node(void* node)
 {
         if(NULL == node)
                 return NULL;
-        return ((struct node*)node)->next;
+
+        return ((void *)((struct node*)node)->next);              
 }
 
 
@@ -378,7 +380,9 @@ void* get_value_in_index_n(void* head, uint64_t n)
                 return NULL;
         }
 
-        struct node* aux_ptr = (*(struct node**)(head));
+        struct node* aux_ptr = ((struct node*)(head));
+        
+
         while(NULL != get_next_node((void *)aux_ptr) && n>0)                  
         {
                 next_node((void**) &aux_ptr);
@@ -395,6 +399,19 @@ void* get_value_in_index_n(void* head, uint64_t n)
 
 
 
+void  free_linked_list(void** head)
+{
+        while(NULL != (*head))
+        {
+                struct node* aux_ptr = (*head);
+                (*head) = get_next_node((*head));
+                free(aux_ptr->data);
+                free(aux_ptr);
+        }
+        head = NULL;
+
+        return ;
+}
 
 
 
