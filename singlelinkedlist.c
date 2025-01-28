@@ -220,7 +220,7 @@ void add_node_to_head(void** head, void* node)
         */
         if(NULL == (*head))
         {
-                head = node;
+                (*head) = node;
                 return;
         }
         if(NULL == node)
@@ -260,7 +260,7 @@ void add_node_to_tail(void** head, void* node)
         */
         if(NULL == (*head))
         {
-                head = node;
+                (*head) = node;
                 return;
         }
         if(NULL == node)
@@ -310,7 +310,7 @@ void add_node_in_index_n(void** head, void* node, uint64_t position)
         */        
         if(NULL == (*head))
         {
-                head = node;
+                (*head) = node;
                 return;
         }
         if(NULL == node)
