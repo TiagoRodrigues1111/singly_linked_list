@@ -107,9 +107,9 @@ void single_ops_test()
         
         printf("%u\n", *((uint32_t*)get_value(head1)));
 
-        printf("%u\n", get_next_node(head1));
+        printf("%p\n", get_next_node(head1));
 
-        printf("%u\n", head1);
+        printf("%p\n", head1);
 
         printf("%u\n", *((uint32_t*)get_value_in_index_n(head1,0)));
 
@@ -311,7 +311,7 @@ void single_linked_list_stress_test3()
                 {
                         if(NULL != get_value(heads[i]))
                         {
-                                printf("%lu ",*((uint16_t*)get_value(heads[i])));
+                                printf("%u ",*((uint16_t*)get_value(heads[i])));
                         }
                         remove_head_node(&heads[i]);
                 }
@@ -376,14 +376,14 @@ void single_linked_list_stress_test4()
                         value_aux = get_value(head1);                               
                         if(NULL != value_aux)
                         {
-                                printf("%lu\n",*((uint16_t*)value_aux));
+                                printf("%u\n",*((uint16_t*)value_aux));
                         }
                         break; 
                 case 7:
                         value_aux = get_value_in_index_n(head1, rand() % 400);     
                         if(NULL != value_aux)
                         {
-                                printf("%lu\n",*((uint16_t*)value_aux));
+                                printf("%u\n",*((uint16_t*)value_aux));
                         }
                         break; 
 
@@ -435,13 +435,13 @@ void tutorial()
         value_aux = get_value(head1);                                           // get value at the head of list
         if(NULL != value_aux)
         {
-                printf("%lu\n",*((uint16_t*)value_aux));
+                printf("%u\n",*((uint16_t*)value_aux));
         } 
 
         value_aux = get_value_in_index_n(head1, 1);                             // get value at index 1 of list
         if(NULL != value_aux)
         {
-                printf("%lu\n",*((uint16_t*)value_aux));
+                printf("%u\n",*((uint16_t*)value_aux));
         }
 
 
