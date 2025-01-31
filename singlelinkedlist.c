@@ -153,6 +153,7 @@ void create_node(void** node)
                 return ;
         }
         (*(struct node **)(node))->next = NULL;
+        (*(struct node **)(node))->data = NULL;
         return ;
 }
 
@@ -707,7 +708,7 @@ void  free_linked_list(void** head)
         {
                 return;
         }
-        
+
         while(NULL != (*head))
         {
                 struct node* aux_ptr = (*head);
